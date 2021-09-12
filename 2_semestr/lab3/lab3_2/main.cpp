@@ -4,12 +4,14 @@
 
 using namespace std;
 
+// описание структуры продуктов
 struct product_group
 {
     int quantity;
     double price;
 };
 
+// принцип работы такой же как в предыдущем скрипте, создаем функции удаления, добавления, вывода информации
 struct MyQueue
 {
     struct Node
@@ -19,7 +21,9 @@ struct MyQueue
     };
     Node* First = NULL;
     int Count = 0;
+    // цена товара
     double full_cost = 0;
+    // доход от продаж
     double income = 0;
     bool Push(product_group);
     bool Pop(product_group&);
@@ -34,13 +38,15 @@ bool MyQueue::Push(product_group dt)
         First -> next = NULL;
         First -> data = dt;
         Count = 1;
+        // увеличиваем общую стоимость товаров
         full_cost += dt.price * dt.quantity;
     }
     else
     {
         Node *temp;
         temp = First;
-        while(temp -> next != NULL) temp = temp -> next;
+        while(temp -> next != NULL) 
+            temp = temp -> next;
         temp -> next = new Node;
         temp -> next -> data = dt;
         temp -> next -> next = NULL;
@@ -73,6 +79,7 @@ void MyQueue::Info()
     }
 }
 
+// проверка есть ли товар который нужно продать в стеке, если есть вернуть истину иначе ложь
 bool check(MyQueue Q, product_group dt_x)
 {
     product_group dt;
@@ -85,24 +92,25 @@ bool check(MyQueue Q, product_group dt_x)
         dt.quantity = a -> data.quantity;
         if(dt_x.quantity <= dt.quantity)
         {
-        dt_x.quantity = 0;
+            dt_x.quantity = 0;
         }
         else
         {
-        dt_x.quantity -= dt.quantity;
+            dt_x.quantity -= dt.quantity;
         }
         if(dt_x.quantity == 0)
         {
-        return true;
+            return true;
         }
         else
         {
-        if(k < Q.Count)
-        {
-            k++;
-            a = a -> next;
-        }
-        else return false;
+            if(k < Q.Count)
+            {
+                k++;
+                a = a -> next;
+            }
+        else 
+            return false;
         }
     }
     return false;

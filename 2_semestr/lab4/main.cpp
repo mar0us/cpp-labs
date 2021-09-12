@@ -4,6 +4,7 @@
 
 using namespace std;
 
+// создаем структуру, ноутбука с полями память, оперативная память, модель и цвет
 struct laptop
 {
     int memory;
@@ -12,6 +13,7 @@ struct laptop
     string color;
 };
 
+// создаем стек
 struct MyQueue
 {
     struct Node
@@ -26,6 +28,7 @@ struct MyQueue
     bool Pop(char*&, int& n);
 };
 
+// функция добавления в стек
 bool MyQueue::Push(char* data, int n)
 {
     if(!First)
@@ -33,7 +36,9 @@ bool MyQueue::Push(char* data, int n)
         First = new Node;
         First -> next = NULL;
         First -> data = new char[n];
-        for(int i = 0; i < n; i++) (First -> data)[i] = data[i];
+        // проходим символам строки и записываем полученные данные в стек
+        for(int i = 0; i < n; i++) 
+            (First -> data)[i] = data[i];
         Count = 1;
         First -> nnn = n;
     }
@@ -51,23 +56,25 @@ bool MyQueue::Push(char* data, int n)
     }
     return true;
 }
-
+// функция удаления из стека
 bool MyQueue::Pop(char*& data, int& n)
 {
     if(!First) return false;
     Node* temp = First -> next;
     n = First -> nnn;
     data = new char[n];
-    for(int i = 0; i < First -> nnn; i++) data[i] = (First -> data)[i];
+    for(int i = 0; i < First -> nnn; i++) 
+        data[i] = (First -> data)[i];
     delete[] (First -> data);
     delete First;
     First = temp;
     Count--;
     return true;
 }
-
+// функция получения товара из бинарного файла
 void GetSeria(char*& data, int &n, laptop A)
 {
+    // выясняем количество символов в модели и цвете
     size_t s1 = A.model.size();
     size_t s2 = A.color.size();
     int n1 = sizeof(int);
@@ -76,41 +83,58 @@ void GetSeria(char*& data, int &n, laptop A)
     int n3 = s1;
     int n4_size = sizeof(size_t);
     int n4 = s2;
+
+    // записываем все полученные данные в строку
     n = n1 + n2 + n3_size + n3 + n4_size + n4;
     data = new char [n];
+
     char* d1 = reinterpret_cast<char*> (&A.memory);
     char* d2 = reinterpret_cast<char*> (&A.RAM);
     char* d3_size = reinterpret_cast<char*> (&s1);
     char* d3 = const_cast<char*> (A.model.c_str());
     char* d4_size = reinterpret_cast<char*> (&s2);
     char* d4 = const_cast<char*> (A.color.c_str());
-    for(int i = 0; i < n1; i++) data[i] = d1[i];
-    for(int i = 0; i < n2; i++) data[i + n1] = d2[i];
-    for(int i = 0; i < n3_size; i++) data[i + n1 + n2] = d3_size[i];
-    for(int i = 0; i < n3; i++) data[i + n1 + n2 + n3_size] = d3[i];
-    for(int i = 0; i < n4_size; i++) data[i + n1 + n2 + n3_size + n3] = d4_size[i];
-    for(int i = 0; i < n4; i++) data[i + n1 + n2 + n3_size + n3 + n4_size] = d4[i];
+
+    for(int i = 0; i < n1; i++)
+        data[i] = d1[i];
+    for(int i = 0; i < n2; i++) 
+        data[i + n1] = d2[i];
+    for(int i = 0; i < n3_size; i++) 
+        data[i + n1 + n2] = d3_size[i];
+    for(int i = 0; i < n3; i++) 
+        data[i + n1 + n2 + n3_size] = d3[i];
+    for(int i = 0; i < n4_size; i++) 
+        data[i + n1 + n2 + n3_size + n3] = d4_size[i];
+    for(int i = 0; i < n4; i++) 
+        data[i + n1 + n2 + n3_size + n3 + n4_size] = d4[i];
 }
 
 void GetDeSeria(char* data, int n, laptop& A)
 {
     int n1, n2, n3_size, n3, n4_size, n4;
+
     n1 = sizeof(int);
     n2 = sizeof(int);
     n3_size = sizeof(size_t);
+    
     size_t p1 = *reinterpret_cast<size_t*> (data + n1 + n2);
     n3 = p1;
+
     string s1(data + n1 + n2 + n3_size, p1);
     n4_size = sizeof(size_t);
+
     size_t p2 = *reinterpret_cast<size_t*> (data + n1 + n2 + n3_size + n3);
     n4 = p2;
+
     string s2(data + n1 + n2 + n3_size + n3 + n4_size, p2);
+
     A.memory = *reinterpret_cast<int*> (data);
     A.RAM = *reinterpret_cast<int*> (data + n1);
     A.model = s1;
     A.color = s2;
 }
 
+// получение информации из бинарного файла
 bool InputBinaryFile(MyQueue &Q)
 {
     fstream f_in("out.dat", ios::in | ios::binary);
@@ -139,12 +163,15 @@ bool InputBinaryFile(MyQueue &Q)
 int main()
 {
     setlocale(LC_ALL, "Russian");
+    // создаем стек
     MyQueue Q;
     char* data;
     int n = 0;
     int m = 1;
     laptop A;
+    // считываем данные из файла
     InputBinaryFile(Q);
+    // меню на основе switch
     while(m)
     {
         cout << "1. добавить товар в очередь" << endl;
@@ -162,6 +189,7 @@ int main()
                 cout << "оперативная память = "; cin >> A.RAM;
                 cout << "модель = "; cin >> A.model;
                 cout << "цвет = "; cin >> A.color;
+                // добавляем элемент в стек
                 GetSeria(data, n, A);
                 Q.Push(data, n);
                 system("clear");
@@ -169,6 +197,7 @@ int main()
             }
             case 2:
             {
+                // проверяем есть ли элемент в стеке если есть удаляем, если нет выводим соответствующее сообщение
                 system("clear");
                 laptop A_x;
                 bool metka = false;
@@ -203,6 +232,7 @@ int main()
             }
             case 3:
             {
+                // пройтись по всем элементам стека вывести информацию и очистить стек
                 while(Q.Count)
                 {
                     Q.Pop(data, n);
@@ -214,7 +244,7 @@ int main()
                     cout << "цвет = " << A.color << endl << endl;
                 }
                 cin.ignore(256,'\n');
-                    cin.get();
+                cin.get();
                 system("clear");
                 break;
             }

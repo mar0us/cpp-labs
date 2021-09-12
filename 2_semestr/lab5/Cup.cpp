@@ -1,3 +1,4 @@
+// модуль для меню
 #include <iostream>
 #include "Cup.h"
 using namespace std;
@@ -15,6 +16,7 @@ void Cup_del(void* S)
 {
     delete (Cup*) S;
 }
+// вывод информации о стеке
 void Cup_out(DLList List)
 {
     Cup A;
@@ -37,6 +39,7 @@ void Cup_out(DLList List)
         List.MoveNext();
     }
 }
+// ввод элемента стека
 void Cup_cin(Cup& A)
 {
     cout << "введите ваши данные:" << endl;

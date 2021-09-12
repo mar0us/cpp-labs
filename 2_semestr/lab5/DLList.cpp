@@ -1,11 +1,14 @@
+// модуль для изменения стека
+// модуль прилагался в задании, так что некоторые функции не использовались
 #include <iostream>
 #include "DLList.h"
 using namespace std;
+
 void DLList::Out()
 {
     if(!F)
     {
-        cout << "List is empty" << endl;
+        cout << "список пустой" << endl;
         return;
     }
     Node* temp = F;
@@ -24,18 +27,21 @@ void DLList::Info()
     else cout << "список пустой" << endl;
     if(C) cout << "текущие данные узла = " << C->data << endl;
 }
+// функция проверки есть ли первый элемент
 bool DLList::MoveFirst()
 {
     if(!F) return false;
     C = F;
     return true;
 }
+// функция проверки есть ли последний элемент
 bool DLList::MoveLast()
 {
     if(!L) return false;
     C = L;
     return true;
 }
+// функция проверки можно ли идти дальше по стеку
 bool DLList::MoveNext()
 {
     if(!F) return false;
@@ -48,6 +54,7 @@ bool DLList::MoveNext()
     C = C->next;
     return true;
 }
+// функция проверки можно ли идти назад по стеку
 bool DLList::MovePrev()
 {
     if(!F) return false;
@@ -75,6 +82,7 @@ bool DLList::Init(void* data)
     }
     else return false;
 }
+// функция добавления элемента на следующую позицию в стек
 bool DLList::AddNext(void* data)
 {
     if(!F) return Init(data);
@@ -89,6 +97,7 @@ bool DLList::AddNext(void* data)
     Count++;
     return true;
 }
+// функция добавления элемента на предыдущую позицию в стек
 bool DLList::AddPrev(void* data)
 {
     if(!F) return Init(data);
@@ -103,16 +112,19 @@ bool DLList::AddPrev(void* data)
     Count++;
     return true;
 }
+// функция добавления элемента на первую позицию в стек
 bool DLList::AddFirst(void* data)
 {
     if(MoveFirst()) return AddPrev(data);
     else return Init(data);
 }
+// функция добавления элемента на последнюю позицию в стек
 bool DLList::AddLast(void* data)
 {
     if(MoveLast()) return AddNext(data);
     else return Init(data);
 }
+// функция удаления элемента с первой позиции
 bool DLList::DelFirst(void*& data)
 {
     if(!F) return false;
@@ -130,6 +142,7 @@ bool DLList::DelFirst(void*& data)
     }
     return true;
 }
+// функция удаления элемента с последней позиции
 bool DLList::DelLast(void*& data)
 {
     if(!F) return false;
@@ -176,6 +189,7 @@ bool DLList::DelPrev(void*& data)
     if(MovePrev()) return Del(data);
     return false;
 }
+// функция очищения стека
 void DLList::Clear()
 {
     if(!MoveFirst())
@@ -186,6 +200,7 @@ void DLList::Clear()
     void* k;
     while(Del(k));
 }
+// функция для перемещения к к-ому элементу стека
 bool DLList::Move_k(int k)
 {
     if(k >= 0 & k < Count)
