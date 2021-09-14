@@ -1,33 +1,64 @@
 #include<iostream>
+#include<fstream>
+#include<sstream>
 
 using namespace std;
 
 struct datetime
 {
     int second, minute, hour, day, month, year;
+
+    void next_date(datetime*);
+    void previous_date(datetime*);
+    void print_date(datetime);
+    void print_information(datetime*, int);
+    void print_information_no_next_month(datetime*, int);
 };
 
+
+
 void get_date(datetime*, int, int, int, int, int, int);
-void print_date(datetime);
 bool check_day(int, int);
 bool check_month(int, int);
-void next_date(datetime*);
-void previous_date(datetime*);
+int get_count_lines(string);
+string **read_file(string, int);
+
 
 int main()
 {
     setlocale(LC_ALL, "Russian");
 
-    datetime time;
+    string path_file = "file.txt";
+    int count_lines = get_count_lines(path_file);
+    string **lines = read_file(path_file, count_lines);
+    datetime *dates = new datetime[count_lines];
+    
+    for (int i = 0; i < count_lines; i++)
+    {
+        get_date(&dates[i], stoi(lines[i][0]), stoi(lines[i][1]), stoi(lines[i][2]), stoi(lines[i][3]), stoi(lines[i][4]), stoi(lines[i][5]));
+    }
+    
+    for (int i = 0; i < count_lines; i++)
+    {
+        dates[i].print_information(&dates[i], i+1);
+        // dates[i].print_information(&dates[i], i+1);
+    }
 
-    get_date(&time, 3, 5, 2, 31, 12, 1998);
+    cout<<"даты которые не попадут на след. месяц"<<endl;
+    for (int i = 0; i < count_lines; i++)
+    {
+        if (check_day(dates[i].month, dates[i].day+1))
+            dates[i].print_information_no_next_month(&dates[i], i+1);
+    }
 
-    print_date(time);
+    
 
-    next_date(&time);
-    print_date(time);
-    previous_date(&time);
-    print_date(time);
+    for (int i = 0; i < count_lines; i++)
+    {
+        delete [] lines[i];
+    }
+    delete [] lines;
+    
     return 0;
 }
 
@@ -76,7 +107,7 @@ void get_date(datetime* date, int second, int minute, int hour, int day, int mon
         date->year = year;
 }
 
-void print_date(datetime date)
+void datetime::print_date(datetime date)
 {
     cout<<"----------------------"<<endl;
     cout<<"текущие время и дата:"<<endl;
@@ -87,6 +118,25 @@ void print_date(datetime date)
     cout<<"месяц: "<< date.month <<endl;
     cout<<"год: "<< date.year <<endl;
     cout<<"----------------------"<<endl<<endl;
+}
+
+void datetime::print_information(datetime *date, int n)
+{
+    cout<<"№ "<<n<<"; дата: "<<date->day<<"."<<date->month<<"."<<date->year<<";\t";
+    date->next_date(date);
+    cout<<"след. дата: "<<date->day<<"."<<date->month<<"."<<date->year<<";\t";
+    date->previous_date(date);
+    date->previous_date(date);
+    cout<<"пред. дата: "<<date->day<<"."<<date->month<<"."<<date->year<<endl;
+    date->next_date(date);
+}
+
+void datetime::print_information_no_next_month(datetime *date, int n)
+{
+    cout<<"№ "<<n<<"; дата: "<<date->day<<"."<<date->month<<"."<<date->year<<";\t";
+    date->next_date(date);
+    cout<<"след. дата: "<<date->day<<"."<<date->month<<"."<<date->year<<endl;
+    date->previous_date(date);
 }
 
 bool check_day(int month, int day)
@@ -120,7 +170,7 @@ bool check_month(int month)
     return true;
 }
 
-void next_date(datetime* date)
+void datetime::next_date(datetime* date)
 {
     if (check_day(date->month, date->day + 1))
         date->day++;
@@ -139,7 +189,7 @@ void next_date(datetime* date)
     }
 }
 
-void previous_date(datetime* date)
+void datetime::previous_date(datetime* date)
 {
     int month_31day[7] = {1, 3, 5, 7, 8, 10, 12};
 
@@ -168,4 +218,49 @@ void previous_date(datetime* date)
             date->year--;
         }
     }
+}
+
+
+int get_count_lines(string path_file)
+{
+    ifstream f(path_file);
+    string s;
+    int count = 0;
+    while (getline(f, s))
+    {
+        count++;
+    }
+    
+    return count;
+}
+
+string **read_file(string path_file, int count_lines)
+{
+    ifstream f(path_file);
+    string line;
+
+    string **lines = new string*[count_lines];
+    for (int i = 0; i < count_lines; i++)
+    {
+        lines[i] = new string[6];
+    }
+
+    int j = 0;
+    while (getline(f, line))
+    {
+        string buf;
+        stringstream x;
+        x << line;
+
+        for (int i = 0; i < 6; i++)
+        {
+            x >> buf;
+            lines[j][i] = buf;
+        }
+        j++;        
+    }
+
+
+    f.close();
+    return lines;
 }
