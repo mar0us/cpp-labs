@@ -4,8 +4,9 @@
 
 using namespace std;
 
-struct datetime
+class datetime
 {
+    private:
     int second, minute, hour, day, month, year;
 
     void next_date(datetime*);
@@ -13,13 +14,13 @@ struct datetime
     void print_date(datetime);
     void print_information(datetime*, int);
     void print_information_no_next_month(datetime*, int);
+
+    void get_date(datetime*, int, int, int, int, int, int);
+    bool check_day(int, int);
+    bool check_month(int, int);
 };
 
 
-
-void get_date(datetime*, int, int, int, int, int, int);
-bool check_day(int, int);
-bool check_month(int, int);
 int get_count_lines(string);
 string **read_file(string, int);
 
