@@ -228,7 +228,7 @@ int main()
             }
             case 10:
             {
-                system("clear");;
+                system("clear");
                 Cup_out(List);
                 cin.ignore(256,'\n');
                 cin.get();

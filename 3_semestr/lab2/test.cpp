@@ -7,14 +7,33 @@ using namespace std;
 class Datetime
 {
 private:
-    int second, minute, hour, day, month, year;
+    
 
     bool _check_day(int, int);
     bool _check_month(int);
 
 public:
-    Datetime(){}
-    Datetime(int second, int minute, int hour, int day, int month, int year): second(second), minute(minute), hour(hour), day(day), month(month), year(year){}
+    int second, minute, hour, day, month, year;
+    Datetime(int day, int month, int year, int hour, int minute, int second): day(day), month(month), year(year), hour(hour), minute(minute), second(second)
+    {
+        if (day > 31 or day < 1)
+            this->day = 1;
+
+        if (month < 1 or month > 12)
+            this->month = 1;
+        
+        if (year < 1)
+            this->year = 1;
+            
+        if (hour < 0 or hour > 12)
+            this->hour = 1;
+
+        if (minute < 0 or minute > 60)
+            this->minute = 1;
+
+        if (second < 0 or second > 60)
+            this->second = 1;
+    }
 
     void next_date();
     void previous_date();
@@ -22,63 +41,6 @@ public:
     void print_information(int);
     void print_information_no_next_month(int);    
 };
-
-
-
-class Read_file_date
-{
-private:
-    int _get_count_lines();
-
-    string path_file;
-    string **_read_file(int);
-    string **lines;
-
-public:
-    // Datetime **dates = new Datetime*[count_lines];
-    int count_lines;
-    Read_file_date(string path_file, Datetime **dates): path_file(path_file)
-    {
-        dates = new Datetime*[count_lines];
-        count_lines = _get_count_lines();
-        lines = _read_file(count_lines);
-
-        for (int i = 0; i < 6; i++)
-        {
-            dates[i] = new Datetime(stoi(lines[i][0]), stoi(lines[i][1]), stoi(lines[i][2]), stoi(lines[i][3]), stoi(lines[i][4]), stoi(lines[i][5]));
-        }
-    }
-};
-
-
-
-
-int main()
-{
-    setlocale(LC_ALL, "Russian");
-    
-    string path_file = "data.txt";
-    Datetime **dates;
-    Read_file_date file(path_file, dates);
-
-    for (int i = 0; i < file.count_lines; i++)
-    {
-        dates[i]->print_date();
-    }
-        
-
-    
-
-    return 0;
-}
-
-
-void Datetime::print_date()
-{
-    cout<<"текущая дата\n"
-    <<day<<"."<<month<<"."<<year<<"\t"
-    <<hour<<":"<<minute<<":"<<second<<endl;
-}
 
 bool Datetime::_check_day(int day, int month)
 {
@@ -104,14 +66,12 @@ bool Datetime::_check_day(int day, int month)
     return true;
 }
 
-
 bool Datetime::_check_month(int month)
 {
     if (month > 12 or month < 1)
         return false;
     return true;
 }
-
 
 void Datetime::next_date()
 {
@@ -163,9 +123,58 @@ void Datetime::previous_date()
     }
 }
 
+void Datetime::print_date()
+{
+    // cout<<"текущая дата\n"
+    
+    cout<<day<<"."<<month<<"."<<year<<"\t"
+    <<hour<<":"<<minute<<":"<<second;
+}
 
 
-int Read_file_date::_get_count_lines()
+class Data_reader
+{
+private:
+    string **_read_file(int);
+    int _get_count_lines();
+
+    
+    string path_file = "data.txt";
+    string **lines;
+
+public:
+    // Datetime **dates = new Datetime*[count_lines];
+    int count_lines;
+    Data_reader()
+    {
+        count_lines = _get_count_lines();
+    }
+
+    Datetime **get_value()
+    {
+        Datetime **dates;
+        dates = new Datetime*[count_lines];
+        lines = _read_file(count_lines);
+        
+        for (int i = 0; i < count_lines; i++)
+        {
+            dates[i] = new Datetime(stoi(lines[i][0]), stoi(lines[i][1]), stoi(lines[i][2]), stoi(lines[i][3]), stoi(lines[i][4]), stoi(lines[i][5]));
+        }
+
+        return dates;     
+    }
+
+    ~Data_reader()
+    {
+        cout<<"удаление памяти";
+        for (int i = 0; i < count_lines; i++)
+        {
+            delete [] lines[i];    
+        }
+    }
+};
+
+int Data_reader::_get_count_lines()
 {
     ifstream f(path_file);
     string s;
@@ -178,7 +187,7 @@ int Read_file_date::_get_count_lines()
     return count;
 }
 
-string **Read_file_date::_read_file(int count_lines)
+string **Data_reader::_read_file(int count_lines)
 {
     ifstream f(path_file);
     string line;
@@ -204,7 +213,129 @@ string **Read_file_date::_read_file(int count_lines)
         j++;        
     }
 
-
     f.close();
     return lines;
 }
+
+class UI
+{
+private:
+    int n;
+
+    void _print_all(Datetime **dates, Data_reader data)
+    {
+        // system("clear");
+        for (int i = 0; i < data.count_lines; i++)
+        {
+            cout<<i+1<<". ";
+            dates[i]->print_date();
+            cout<<"\tслед. дата:\t";
+            dates[i]->next_date();
+            dates[i]->print_date();
+            cout<<"\tпред. дата:\t";
+            dates[i]->previous_date();
+            dates[i]->print_date();
+            cout<<endl;
+        }
+    }
+
+    void _print_not_next_month(Datetime **dates, Data_reader data)
+    {
+        for (int i = 0; i < data.count_lines; i++)
+        {
+            int month = dates[i]->month;
+            dates[i]->next_date();
+            if (dates[i]->month != month)
+            {
+                dates[i]->previous_date();
+                continue;   
+            }
+
+
+            dates[i]->previous_date();
+            cout<<i+1<<". ";
+            dates[i]->print_date();
+            cout<<"\tслед. дата:\t";
+            dates[i]->next_date();
+            dates[i]->print_date();
+            cout<<"\tпред. дата:\t";
+            dates[i]->previous_date();
+            dates[i]->print_date();
+            cout<<endl;
+        }
+    }
+
+public:
+    UI()
+    {
+        cout<<"выберите действие"<<endl
+        <<"1 - вывести информацию о всех датах"<<endl
+        <<"2 - вывести информацию о датах, след. дата которых не попадает на след. месяц"<<endl;
+        cin>>n;
+    }
+
+    void print(Datetime **dates, Data_reader data)
+    {
+        switch (n)
+        {
+        case 1:
+            _print_all(dates, data);
+            break;
+        case 2:
+            _print_not_next_month(dates, data);
+        }
+    }
+
+};
+
+class App
+{
+private:
+    // void _print_information();
+    // void _print_inf_var3();
+
+    Datetime **dates;
+    Data_reader data;
+    
+
+public:
+    void run()
+    {
+        dates = data.get_value();
+        UI ui;
+
+        ui.print(dates, data);
+    }
+
+    ~App()
+    {
+        cout<<"деструктор приложения\n";
+        for (int i = 0; i < data.count_lines; i++)
+        {
+            delete [] dates[i];
+        }
+        
+    }
+};
+
+// void App::_print_information()
+// {
+//     for (int i = 0; i < data.count_lines; i++)
+//     {
+//         dates[i]->print_date();
+//     }
+    
+// }
+
+
+
+int main()
+{
+    setlocale(LC_ALL, "Russian");
+    App app;
+    app.run();
+    return 0;
+}
+
+
+
