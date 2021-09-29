@@ -138,9 +138,7 @@ private:
     string **_read_file(int);
     int _get_count_lines();
 
-    
     string path_file = "data.txt";
-    string **lines;
 
 public:
     // Datetime **dates = new Datetime*[count_lines];
@@ -152,6 +150,7 @@ public:
 
     Datetime **get_value()
     {
+        string **lines;
         Datetime **dates;
         dates = new Datetime*[count_lines];
         lines = _read_file(count_lines);
@@ -167,11 +166,13 @@ public:
     // ~Data_reader()
     // {
     //     cout<<"деструктор файла\n";
-    //     for (int i = 0; i < count_lines; i++)
-    //     {
-    //         delete [] lines[i];    
-    //     }
-    //     delete [] lines;
+    //     // for (int i = 0; i < count_lines; i++)
+    //     // {
+    //     //     delete [] lines[i];    
+    //     // }
+    //     // delete [] lines;
+
+        
     // }
 };
 
@@ -239,7 +240,7 @@ private:
             cout<<endl;
         }
     }
-    public:
+    
 
     void _print_not_next_month(Datetime **dates, Data_reader data)
     {
@@ -267,7 +268,7 @@ private:
         }
     }
 
-
+public:
     UI()
     {
         cout<<"выберите действие"<<endl
