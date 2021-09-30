@@ -13,11 +13,15 @@ int main()
     Tree* T = NULL;
     int m = 1;
 
+    // консольный интерфейс взаимодействия с пользователем
     while(m)
     {
+        // открываем файл для считывания данных
         ifstream file("data.txt");
         string line;
         system("clear");
+
+        // вывод меню
         cout << "___________________________________________________" << endl;
         cout << "1. сортировать по цвету" << endl;
         cout << "2. сортировать по цене" << endl;
@@ -31,18 +35,23 @@ int main()
         {
             case 1:
             {
+                // считываем данные из файла с помощью потока
                 while(getline(file, line))
                 {
                     istringstream line_F(line);
                     line_F >> A.color >> A.weight >> A.country >> A.price;
+                    // выполняем сортировку
                     Add_color(T, Init(A));
                 }
+
                 system("clear");
                 Print(T);
+                
                 cin.ignore(256,'\n');
                 cin.get();
                 break;
             }
+            // для остальных типов происходят такие же действия
             case 2:
             {
                 while(getline(file, line))
@@ -51,8 +60,10 @@ int main()
                     line_F >> A.color >> A.weight >> A.country >> A.price;
                     Add_price(T, Init(A));
                 }
+
                 system("clear");
                 Print(T);
+                
                 cin.ignore(256,'\n');
                 cin.get();
                 break;
@@ -62,14 +73,17 @@ int main()
                 float price;
                 cout << "Price = "; 
                 cin >> price;
+
                 while(getline(file, line))
                 {
                     istringstream line_F(line);
                     line_F >> A.color >> A.weight >> A.country >> A.price;
                     Add_price(T, Init(A));
                 }
+
                 system("clear");
                 Print_price(T, price);
+                
                 cin.ignore(256,'\n');
                 cin.get();
                 break;
@@ -77,15 +91,18 @@ int main()
             case 4:
             {
                 char a;
-                cout << "Letter = "; cin >> a;
+                cout << "Буква = "; cin >> a;
+
                 while(getline(file, line))
                 {
-                istringstream line_F(line);
-                line_F >> A.color >> A.weight >> A.country >> A.price;
-                Add_color(T, Init(A));
+                    istringstream line_F(line);
+                    line_F >> A.color >> A.weight >> A.country >> A.price;
+                    Add_color(T, Init(A));
                 }
+
                 system("clear");
                 Print_color(T, a);
+                
                 cin.ignore(256,'\n');
                 cin.get();
                 break;

@@ -6,12 +6,15 @@ using namespace std;
 #ifndef T_h
 #define T_h
 
+// описываем структуру дерева
 struct Tree
 {
     Apple* data;
     Tree* left;
     Tree* right;
 };
+
+// прототипы
 
 bool sort_str(string, string);
 void Add_price(Tree*&, Apple*);

@@ -6,6 +6,7 @@
 
 using namespace std;
 
+// функция сортировки строк, если сортировка завершилась верно возвращает true
 bool sort_str(string a, string b)
 {
     vector <string> v = {a, b};
@@ -14,6 +15,7 @@ bool sort_str(string a, string b)
     else return false;
 }
 
+// функция сортировки по цене
 void Add_price(Tree*& T, Apple* data)
 {
     if(!T)
@@ -23,11 +25,13 @@ void Add_price(Tree*& T, Apple* data)
         T->left = NULL;
         T->right = NULL;
         return;
-  }
+    }
+    //если цена слева меньше цены справа то добавляем в дерево на левую позицию левую цену и наоборот 
     if(data->price < T->data->price) Add_price(T->left, data);
-      else Add_price(T->right, data);
+         else Add_price(T->right, data);
 }
 
+// функция сортировки по цвету
 void Add_color(Tree*& T, Apple* data)
 {
     if(!T)
@@ -38,10 +42,12 @@ void Add_color(Tree*& T, Apple* data)
         T->right = NULL;
         return;
     }
+    // аналогично тому что происходит при сортировке по цене
     if(sort_str(data->color, T->data->color)) Add_color(T->left, data);
     else Add_color(T->right, data);
 }
 
+// функция вывода отсортированного дерева в нормальном виде 
 void Print(Tree* T)
 {
     if(!T) return;
@@ -50,6 +56,7 @@ void Print(Tree* T)
     Print(T->right);
 }
 
+// функция очистки памяти
 void Delete(Tree*& T)
 {
     if(T)
@@ -62,6 +69,7 @@ void Delete(Tree*& T)
   }
 }
 
+// функция вывода яблок по цене ниже указаной пользователем
 void Print_price(Tree* T, float price)
 {
     if(!T) return;
@@ -70,6 +78,7 @@ void Print_price(Tree* T, float price)
     Print_price(T->right, price);
 }
 
+// функция вывода яблок цвет которых начинается с определенной буквы
 void Print_color(Tree* T, char a)
 {
     if(!T) return;

@@ -5,6 +5,8 @@
 
 using namespace std;
 
+// прототипы
+
 int** Read(string, int&, int&);
 void Delete(int**&, int);
 int* dijkstra(int**, int, int);
@@ -12,11 +14,15 @@ void dijkstra_route(int**, int, int, int, int*, stack <int>&);
 
 int main()
 {
+    // создаем файл для записи
     ofstream out;
     out.open("out.txt");
+
     int n, m;
     stack <int> route;
+
     int** A = Read("data.txt", n, m);
+
     if(A == NULL | n != m)
     {
         cout << "error";
@@ -51,42 +57,53 @@ int main()
     delete[] d;
     return 0;
 }
+
+// функция считывания данных из файла
 int** Read(string file_name, int& n, int& m)
 {
+    // открываем файл
     ifstream in(file_name);
     if(in.is_open())
     {
         int count = 0;
         int temp;
+
         while(!in.eof())
         {
-        in >> temp;
-        count++;
+            in >> temp;
+            count++;
         }
+
         in.seekg(0, ios::beg);
         in.clear();
+
         int count_space = 0;
         char symbol;
+
         while(!in.eof())
         {
-        in.get(symbol);
-        if(symbol == ' ') count_space++;
-        if(symbol == '\n') break;
+            in.get(symbol);
+            if(symbol == ' ') count_space++;
+            if(symbol == '\n') break;
         }
+
         in.seekg(0, ios::beg);
         in.clear();
+
         n = count / (count_space + 1);
         m = count_space + 1;
+
         int **x;
         x = new int*[n];
+        
         for(int i = 0; i < n; i++) x[i] = new int[m];
-        for(int i = 0; i < n; i++)
-        {
-        for(int j = 0; j < m; j++)
-        {
-            in >> x[i][j];
-        }
-        }
+            for(int i = 0; i < n; i++)
+            {
+                for(int j = 0; j < m; j++)
+                {
+                    in >> x[i][j];
+                }
+            }
         in.close();
         return x;
     }

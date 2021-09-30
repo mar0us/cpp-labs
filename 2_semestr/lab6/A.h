@@ -4,6 +4,7 @@ using namespace std;
 #ifndef A_h
 #define A_h
 
+// описываем структуру яблок
 struct Apple
 {
     string color;
@@ -11,6 +12,8 @@ struct Apple
     string country;
     float price;
 };
+
+// прототипы для работы со структурой
 
 Apple* Init(Apple);
 void Del(Apple*);
