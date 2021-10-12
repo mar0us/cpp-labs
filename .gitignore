@@ -1,4 +1,7 @@
+.vscode/
 *.txt
 !data.txt
 *.zip
 *.o
+build/
+!CMakeLists.txt
