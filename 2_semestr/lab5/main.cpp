@@ -125,12 +125,12 @@ int main()
                 system("clear");
                 if(List.DelLast(S))
                 {
-                Cup_del(S);
-                Cup_out(List);
+                    Cup_del(S);
+                    Cup_out(List);
                 }
                 else
                 {
-                cout << "ошибка" << endl;
+                    cout << "ошибка" << endl;
                 }
                 cin.ignore(256,'\n');
                 cin.get();

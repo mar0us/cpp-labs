@@ -136,7 +136,7 @@ int main()
     while(m)
     {
         Q.Info();
-        cout << "1. Получение товара" << endl;
+        cout << "1. Добавление товара" << endl;
         cout << "2. Продажа товаров" << endl;
         cout << "3. Отчет" << endl;
         cout << "0. Выход" << endl;
