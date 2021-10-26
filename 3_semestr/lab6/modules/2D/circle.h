@@ -9,7 +9,7 @@ private:
     double r;
 public:
     Circle(double);
-    ~Circle(){}
+    ~Circle();
     virtual double calc_perimeter();
     virtual double calc_square();
     virtual Figure* Clone();

@@ -8,10 +8,9 @@ enable_language(CXX)
 project(Figure_calc)
 
 set(SOURCE_MAIN main.cpp)
-set(SOURCE_LIB modules/2D/figure.cpp modules/2D/circle.cpp modules/2D/triangle.cpp modules/2D/my_figure.cpp modules/3D/cylinder.cpp)
+set(SOURCE_LIB modules/2D/figure.cpp modules/2D/circle.cpp modules/2D/triangle.cpp modules/2D/my_figure.cpp modules/3D/cylinder.cpp modules/UI/ui_console.cpp)
 
-
-add_library(figure_lib STATIC ${SOURCE_LIB})
+add_library(libs STATIC ${SOURCE_LIB})
 add_executable(main.o ${SOURCE_MAIN})
 
-target_link_libraries(main.o figure_lib)
+target_link_libraries(main.o libs)
