@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.8)
 
-set(CMAKE_C_COMPILER "/usr/local/gcc-11.2.0/bin/gcc-11.2")
-set(CMAKE_CXX_COMPILER "/usr/local/gcc-11.2.0/bin/g++-11.2")
+set(CMAKE_C_COMPILER "/usr/local/gcc-11.1.0/bin/gcc-11.2")
+set(CMAKE_CXX_COMPILER "/usr/local/gcc-11.1.0/bin/g++-11.2")
 
 enable_language(CXX)
 
