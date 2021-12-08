@@ -22,9 +22,9 @@ public:
 
 class Circle_cylinder : public Cylinder
 {
-// public:
-//     Circle_cylinder(double h, Figure *fig);
-//     ~Circle_cylinder();
+public:
+    Circle_cylinder(double h, Figure *fig);
+    ~Circle_cylinder();
 protected:
     static Figure *create_figure(Figure*);
 

@@ -1,222 +1,226 @@
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <cstdlib>
+#include<stdio.h>
 
-using namespace std;
 
-// создаем структуру телефона, модель, оперативная память, память и батарея
-struct phone
+template<typename T1>
+class List
 {
-    string Model;
-    int RAM;
-    int Memory;
-    int Battery;
-};
+public:
+    List();
+    ~List();
+    void push(T1);
+    void push(T1, int);
+    int get_size() { return this->size; }
 
-// создаем стек, внутри которого создаем узел
-struct MyStack
-{
-    struct Node
+    T1& operator[](const int);
+    T1 delete_elem(const int);
+    // T1& set(const int index);
+
+private:
+    template<typename T2>
+    class Node
     {
-        phone data;
-        Node *prev;
+    public:
+        Node *pNext;
+        T2 data;
+
+        Node(T2 data = T2(), Node *pNext = nullptr)
+        {
+            this->data = data;
+            this->pNext = pNext;
+        }
     };
-    // верхний элемент стека
-    Node *Top = NULL;
-    // количество элементов в стеке
-    int Count = 0;
-    // функция добавления элемента в стека
-    bool Push(phone);
-    // функция вытаскивания элемента из стека
-    bool Pop(phone&);
-    // функция вывода информации о стеке
-    void Info();
+
+    int size = 0;
+    Node<T1> *head;
 };
 
-// описываем функцию добавления элемента в стек
-bool MyStack::Push(phone dt)
+template<typename T1>
+List<T1>::List()
 {
-    // если верхнего элемента нет, создаем стек с 1 элементом
-    if(!Top)
+    this->size = 0;
+    this->head = nullptr;
+}
+
+template<typename T1>
+List<T1>::~List()
+{
+
+}
+
+
+template<typename T1> 
+void List<T1>::push(T1 data)
+{
+    if (this->head == nullptr)
     {
-        Top = new Node;
-        Top -> prev = NULL;
-        Count = 1;
+        this->head = new Node<T1>(data);
     }
-    // иначе добавляем новый элемент в начало стека
     else
     {
-        Node *temp;
-        temp = new Node;
-        temp -> prev = Top;
-        Top = temp;
-        Count++;
+        Node<T1> *current = this->head;
+        while (current->pNext != nullptr)
+        {
+            // current->pNext = current->pNext;
+            current = current->pNext;
+        }
+        current->pNext = new Node<T1>(data);
     }
-    Top -> data = dt;
-    // если добавление прошло успешно возвращаем true
-    return true;
+    this->size++;
 }
 
-// описываем функцию извлечение элемента из стека
-bool MyStack::Pop(phone& dt)
+template<typename T1> 
+T1 &List<T1>::operator[](int index)
 {
-    // если список пустой вернуть false
-    if(!Top) return false;
-    // иначе сохранить предыдущие элементы в буфер, удалить элемент и сместить предыдущие элементы, затем уменьшить количество элементов
-    Node *temp = Top -> prev;
-    dt = Top -> data;
-    delete Top;
-    Top = temp;
-    Count--;
-    return true;
+    int current_index = 0;  
+    Node<T1> *current = this->head;
+    while (current != nullptr)
+    {
+        if (current_index == index)
+        {
+            return current->data;
+        }
+        current = current->pNext;
+        current_index++;
+    }
+    // T1 a = T1();
+    // return ;
 }
 
-// описание функции вывода информации о стеке
-void MyStack::Info()
+template<typename T1> 
+T1 List<T1>::delete_elem(int index)
 {
-    if(!Top) cout << "стэк пустой" << endl;
+    if (index == 0)
+    {
+        T1 buf = this->head->data;
+        this->head = this->head->pNext;
+        // printf("%d\n", this->head->data);
+        this->size--;
+        return buf;
+
+    }
+
+
+    int current_index = 0;
+    Node<T1> *current = this->head;
+
+    while (current != nullptr)
+    {
+        if (current_index+1 == index)
+        {
+            Node<T1> *next = current->pNext;
+            current->pNext = next->pNext;
+
+            // delete next; next = nullptr;
+            this->size--;
+            return next->data;
+            // current->pNext = current->pNext;
+
+            // current = current->pNext;
+            // delete current; current = nullptr;
+        }
+        current = current->pNext;
+        current_index++;
+        // printf("%d\n", current_index);
+    }
+}
+
+template<typename T1> 
+void List<T1>::push(T1 data, int index)
+{
+    if (this->head == nullptr)
+    {
+        this->head = new Node<T1>(data);
+    }
+    else if (index == 0)
+    {
+        Node<T1> *current = this->head;
+        this->head = new Node<T1>(data);
+        this->head->pNext = current;
+    }
     else
     {
-        cout << endl << "информация о стэке: " << endl;
-        cout << "\tразмер стэка = " << Count << endl;
-        cout <<"\tверхняя модель = " << Top -> data.Model << endl;
-        cout <<"\tверхняя оперативная память = " << Top -> data.RAM << endl;
-        cout <<"\tверхняя память = " << Top -> data.Memory << endl;
-        cout <<"\tверхняя емкость батареии = " << Top -> data.Battery << endl << endl;
+        bool is_added = false;
+        int current_index = 0;
+        Node<T1> *current = this->head;
+        while (current->pNext != nullptr)
+        {
+            if (current_index+1 == index)
+            {
+                Node<T1> *next = current->pNext;
+                current->pNext = new Node<T1>(data);
+                current = current->pNext;
+                current->pNext = next;
+                is_added = true;
+                break;
+            }
+            // current->pNext = current->pNext;
+            current = current->pNext;
+            current_index++;
+        }
+
+        if (!is_added)
+        {
+            current->pNext = new Node<T1>(data);
+        }
+        // current->pNext = new Node<T1>(data);
     }
+    this->size++;
 }
 
-// описание функции вывода информации о элементах стека
-void print(MyStack &S, MyStack &V)
-{
-    phone dt;
-    while(S.Count)
-    {
-        // проходим по всем элементам, выбираем первый выводим информацию о нем, удаляем, затем добавляем его в буфер для восстановления порядка
-        S.Pop(dt);
-        cout <<"\tмодель = " << dt.Model << endl;
-        cout <<"\tоперативная память = " << dt.RAM << endl;
-        cout <<"\tпамять = " << dt.Memory << endl;
-        cout <<"\tемкость батареи = " << dt.Battery << endl << endl;
-        V.Push(dt);
-    }
-    // восстанавливаем порядок эллементов
-    while(V.Count)
-    {
-        V.Pop(dt);
-        S.Push(dt);
-    }
-}
+
+// template<class T1> 
+// T1 &List<T1>::set(int index)
+// {
+//     int current_index = 0;  
+//     Node<T1> *current = this->head;
+//     while (current != nullptr)
+//     {
+//         if (current_index == index)
+//         {
+//             return current->data;
+//         }
+//         current = current->pNext;
+//         current_index++;
+//     }
+// }
+
 
 int main()
 {
-    setlocale(LC_ALL, "Russian");
-    // создаем 2 стека, исходный и буферный
-    MyStack S;
-    MyStack V;
-    phone dt;
-    // считываем данные из файла
-    ifstream file("phone.txt");
-    string line;
-    // считываем строку
-    while(getline(file, line))
-    {
-        istringstream line_F(line);
-        // считываем каждое новое слово
-        line_F >> dt.Model >> dt.RAM >> dt.Memory >> dt.Battery;
-        // добавляем элемент в стек
-        S.Push(dt);
-    }
-    file.close();
-    // создаем меню с помощью switch
-    int m = 1;
-    while(m)
-    {
-        S.Info();
-        cout << "1. добавить телефон в корзину" << endl;
-        cout << "2. вытащить телефон из корзины" << endl;
-        cout << "3. очистить корзину" << endl;
-        cout << "4. показать содержимое корзины" << endl;
-        cout << "0. выход" << endl;
-        cin >> m;
-        switch(m)
-        { 
-            case 1:
-            {
-                // так как я компилирую код из под linux чтобы очистить консоль использую clear, а не cls
-                system("clear");
-                cout << "введите характеристики телефона:" << endl;
-                cout << "модель = "; cin >> dt.Model;
-                cout << "оперативная память = "; cin >> dt.RAM;
-                cout << "память = "; cin >> dt.Memory;
-                cout << "емкость батареи = "; cin >> dt.Battery;
-                // добавляем элемент с заданными параметрами в стек
-                S.Push(dt);
-                system("clear");
-                break;
-            }
-            case 2:
-            {
-                system("clear");
-                phone dt_x;
-                // метка которая при значении ложь говорит что элемент не найден
-                bool metka = false;
-                cout << "введите характеристики телефона:" << endl;
-                cout << "модель = "; cin >> dt_x.Model;
-                cout << "оперативная память = "; cin >> dt_x.RAM;
-                cout << "память = "; cin >> dt_x.Memory;
-                cout << "емкость батареи = "; cin >> dt_x.Battery;
-                // перебираем элементы стека
-                while(S.Count)
-                {
-                    // ищем соответствие, если соответствие не найдено, удаляем элемент из стека и добавляем элемент в буферный стек чтобы потом сохранить порядок
-                    S.Pop(dt);
-                    if(dt.Model != dt_x.Model || dt.RAM != dt_x.RAM || dt.Memory != dt_x.Memory || dt.Battery != dt_x.Battery)
-                    {
-                        V.Push(dt);
-                    }
-                    // как только соответствие найдено выходим из цикла
-                    else
-                    {
-                        metka = true;
-                        break;
-                    }
-                }
-                if(!metka) cout << "телефон не найден" << endl;
-                // восстанавливаем порядок элементов
-                while(V.Count)
-                {
-                    V.Pop(dt);
-                    S.Push(dt);
-                }
-                // чтобы подождать пока пользователь введет символ используем cin.get
-                cin.ignore(256,'\n');
-                cin.get();
-                system("clear");
-                break;
-            }
-            case 3:
-            {
-                // проходим по всем стеку и удаляем элементы
-                system("clear");
-                while(S.Count)
-                {
-                    S.Pop(dt);
-                }
-                break;
-            }
-            case 4:
-            {
-                // вывод информации о элементах стека
-                system("clear");
-                print(S,V);
+    // int i = int();
 
-                cin.ignore(256,'\n');
-                cin.get();
-                system("clear");
-                break;
-            }
-        }
+    List<int> lst;
+    int i_del = 1;
+    lst.push(1);
+    lst.push(2);
+    lst.push(3);
+    lst.push(6);
+    // lst[2] = 5;
+    // printf("элемент = %d\n", lst[1]);
+
+    for (int i = 0; i < lst.get_size(); i++)
+    {
+        printf("%d ", lst[i]);
     }
+    printf("длина = %d\n", lst.get_size());
+    
+    lst.push(10, 0);
+    printf("%d ", lst[1]);
+    // printf("%d\n", lst.delete_elem(1));
+    printf("длина = %d\n", lst.get_size());
+    for (int i = 0; i < lst.get_size(); i++)
+    {
+        printf("%d ", lst[i]);
+    }
+    printf("длина = %d\n", lst.get_size());
+
+
+    // printf("элемент который нужно удалить i[%d] = %d\n", i_del, lst.delete_elem(i_del));
+    // lst.delete_elem(i_del);
+    // printf("элемент = %d\n", lst[1]);
+    // lst.set(2) = 5;
+    // printf("hello world %d\n", lst.get_size());
+    // printf("элемент = %d\n", lst[2]);
+
+    return 0;
 }

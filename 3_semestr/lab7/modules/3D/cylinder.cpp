@@ -7,8 +7,8 @@
 Cylinder::Cylinder(double h, Figure* fig)
 {
     this->h = h;
-    // this->fig = fig->Clone();
-    this->fig = create_figure(fig);
+    this->fig = fig->Clone();
+    // this->fig = create_figure(fig);
 }
 
 Cylinder::~Cylinder()
