@@ -1,16 +1,32 @@
 cmake_minimum_required(VERSION 3.8)
 
+set(PROJECT_NAME Figures.bin)
+set(SOURCE_MAIN src/app.cpp)
+
+project(${PROJECT_NAME}
+    LANGUAGES CXX C
+)
+
 set(CMAKE_C_COMPILER "/usr/local/gcc-11.1.0/bin/gcc-11.2")
 set(CMAKE_CXX_COMPILER "/usr/local/gcc-11.1.0/bin/g++-11.2")
 
-enable_language(CXX)
+add_executable(${PROJECT_NAME} ${SOURCE_MAIN})
 
-project(Figure_calc)
 
-set(SOURCE_MAIN main.cpp)
-set(SOURCE_LIB modules/2D/figure.cpp modules/2D/circle.cpp modules/2D/triangle.cpp modules/2D/my_figure.cpp modules/3D/cylinder.cpp modules/UI/ui_console.cpp)
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
-add_library(libs STATIC ${SOURCE_LIB})
-add_executable(main.o ${SOURCE_MAIN})
 
-target_link_libraries(main.o libs)
+
+# включение подпроектов в основной
+add_subdirectory(modules)
+add_subdirectory(external/glfw)
+add_subdirectory(external/glad)
+
+# линковка библиотеки фигур, glfw, glad
+target_link_libraries(${PROJECT_NAME} 
+    PUBLIC module_figure
+    PRIVATE glfw
+    PRIVATE glad
+)

@@ -1,9 +1,10 @@
 #include<stdio.h>
-#include "modules/2D/figure.h"
-#include "modules/2D/triangle.h"
-#include "modules/2D/circle.h"
-#include "modules/2D/my_figure.h"
-#include "modules/3D/cylinder.h"
+#include "../modules/2D/figure.h"
+#include "../modules/2D/triangle.h"
+#include "../modules/2D/circle.h"
+#include "../modules/2D/my_figure.h"
+#include "../modules/3D/cylinder.h"
+#include "../modules/UI/application.h"
 
 
 
@@ -33,6 +34,10 @@ int main()
     printf("площадь круга = %f\nпериметр круга = %f\n", cir_sq, cir_pe);
     // printf("объем цилиндра полученного из этого круга = %f\n", cir_vol);
 
+
+    Application app;
+
+    app.start(500, 500, "test");
 
     return 0;
 }
