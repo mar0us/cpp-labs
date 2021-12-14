@@ -1,5 +1,4 @@
 #include"circle.h"
-#include"../UI/ui_console.h"
 #include<stdio.h>
 #include<cmath>
 

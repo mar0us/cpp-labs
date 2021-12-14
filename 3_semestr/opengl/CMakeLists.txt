@@ -19,14 +19,12 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
 
 
-# включение подпроектов в основной
+# линковка библиотек
 add_subdirectory(modules)
-add_subdirectory(external/glfw)
-add_subdirectory(external/glad)
+target_link_libraries(${PROJECT_NAME} PUBLIC module_figure)
 
-# линковка библиотеки фигур, glfw, glad
-target_link_libraries(${PROJECT_NAME} 
-    PUBLIC module_figure
-    PRIVATE glfw
-    PRIVATE glad
-)
+add_subdirectory(external/glfw)
+target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
+
+add_subdirectory(external/glad)
+target_link_libraries(${PROJECT_NAME} PRIVATE glad)

@@ -31,10 +31,15 @@ int Application::start(unsigned int window_width, unsigned int window_height, co
 
     glfwMakeContextCurrent(window);
 
-    
+    // если не удалось инициализировать glad завершить программу
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+        return -1;
+
+
+    glClearColor(0, 0, 0.3, 0);
     while (!glfwWindowShouldClose(window))
     {
-        // glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT);
 
         glfwSwapBuffers(window);
 

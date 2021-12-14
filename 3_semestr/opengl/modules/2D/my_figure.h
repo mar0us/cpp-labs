@@ -1,3 +1,4 @@
+#pragma once
 #ifndef MY_FIGURE_H
 #define MY_FIGURE_H
 
