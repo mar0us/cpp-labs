@@ -10,7 +10,12 @@ add_library(${PROJECT_NAME} STATIC
     2D/circle.cpp
     2D/triangle.cpp
     2D/my_figure.cpp
+
     3D/cylinder.cpp
+
     UI/application.cpp
+    UI/window.cpp
+
+    logging/log.cpp
 )
 # target_include_directories(${PROJECT_NAME} PUBLIC 2D/ 3D/)

@@ -3,6 +3,11 @@ cmake_minimum_required(VERSION 3.8)
 set(PROJECT_NAME Figures.bin)
 set(SOURCE_MAIN src/app.cpp)
 
+
+# Debug
+# Release
+set(CMAKE_BUILD_TYPE Debug CACHE STRING "" FORCE)
+
 project(${PROJECT_NAME}
     LANGUAGES CXX C
 )
